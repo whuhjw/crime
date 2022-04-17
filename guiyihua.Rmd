@@ -1,0 +1,28 @@
+---
+title: "标准化"
+output: html_document
+---
+```{r}
+library(readxl)
+
+remove(list = ls())
+setwd("C:\\Users\\jiawei\\Desktop\\apriori\\dilijiaquan")
+my.dir <- paste(getwd(),"/",sep="")
+data1 <- read.csv(paste(my.dir,"gewang.csv",sep=""))
+```
+
+```{r}
+A<-as.matrix(data1)
+B=scale(A)
+C<-as.data.frame(B)
+write.csv(C,file='guiyihuajieguo.csv')
+```
+
+```{r}
+myvars <- names(C) %in% c("OBJECTID","PRO","QUA","VIO","OTH","ID","Shape_Leng","Shape_Area","ID_NEW")
+newdata<-C[!myvars]
+
+df_cor=cor(newdata)
+kappa(df_cor, exact=T)
+```
+

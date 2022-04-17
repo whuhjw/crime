@@ -1,0 +1,123 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(readxl)
+library(arules)
+library(RColorBrewer)
+library(arulesViz)
+
+```
+#2011
+```{r}
+data1 <- read_excel("apriori2011.xlsx")
+rules1 <- apriori(data = data1, parameter = list(support = 0.06 , confidence = 0.55, minlen =2))
+inspect(rules1)
+```
+
+#2012
+```{r}
+data2 <- read_excel("apriori2012.xlsx")
+#挖掘规则
+rules2 <- apriori(data = data2, parameter = list(support = 0.06 , confidence = 0.4, minlen =2))
+#查看规则
+inspect(rules2)
+
+```
+
+#2013
+```{r}
+data3 <- read_excel("apriori2013.xlsx")
+#挖掘规则
+rules3 <- apriori(data = data3, parameter = list(support = 0.06 , confidence = 0.47, minlen =2))
+#查看规则
+inspect(rules3)
+
+```
+
+#2014
+```{r}
+data4 <- read_excel("apriori2014.xlsx")
+#挖掘规则
+rules4 <- apriori(data = data4, parameter = list(support = 0.06 , confidence = 0.49, minlen =2))
+#查看规则
+inspect(rules4)
+
+```
+
+#2015
+```{r}
+data5 <- read_excel("apriori2015.xlsx")
+#挖掘规则
+rules5 <- apriori(data = data5, parameter = list(support = 0.06 , confidence = 0.53, minlen =2))
+#查看规则
+inspect(rules5)
+
+```
+
+#2016
+```{r}
+data6 <- read_excel("apriori2016.xlsx")
+#挖掘规则
+rules6 <- apriori(data = data6, parameter = list(support = 0.06 , confidence = 0.55, minlen =2))
+#查看规则
+inspect(rules6)
+
+```
+
+
+#2017
+```{r}
+data7 <- read_excel("apriori2017.xlsx")
+#挖掘规则
+rules7 <- apriori(data = data7, parameter = list(support = 0.06 , confidence = 0.47, minlen =2))
+#查看规则
+inspect(rules7)
+
+```
+
+#2018
+```{r}
+data8 <- read_excel("apriori2018.xlsx")
+#挖掘规则
+rules8 <- apriori(data = data8, parameter = list(support = 0.06 , confidence = 0.601, minlen =2))
+#查看规则
+inspect(rules8)
+
+```
+
+#2019
+```{r}
+data9 <- read_excel("apriori2019.xlsx")
+#挖掘规则
+rules9 <- apriori(data = data9, parameter = list(support = 0.06 , confidence = 0.48, minlen =2))
+#查看规则
+inspect(rules9)
+
+```
+
+#2020
+```{r}
+data10 <- read_excel("apriori2020.xlsx")
+#挖掘规则
+rules10 <- apriori(data = data10, parameter = list(support = 0.06 , confidence = 0.52, minlen =2))
+#查看规则
+inspect(rules10)
+
+```
+
+
+
+```{r}
+par(family="sans")  #添加字体的方式见3
+plot(rules1,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+
+

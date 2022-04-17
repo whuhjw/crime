@@ -1,0 +1,189 @@
+
+
+ 
+#加载数据2011
+```{r}
+library(readxl)
+library(arules)
+library(RColorBrewer)
+library(arulesViz)
+
+setwd("C:\\Users\\jiawei\\Desktop\\apriori\\aprioriwin2")
+my.dir <- paste(getwd(),"/",sep="")
+data1 <- read.csv(paste(my.dir,"apriori2011.csv",sep=""))
+#挖掘规则
+rules1 <- apriori(data = data1, parameter = list(support = 0.1 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules1)
+
+rules11 <- sort(rules1,by='lift')[1:15]
+inspect(rules11)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules11, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules11, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules11,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2012
+```{r}
+data2 <- read.csv(paste(my.dir,"apriori2012.csv",sep=""))
+#挖掘规则
+rules2 <- apriori(data = data2, parameter = list(support = 0.08 , confidence = 0.7, minlen =2))
+#查看规则
+inspect(rules2)
+rules22 <- sort(rules2,by='lift')[1:15]
+inspect(rules22)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules22, method = "scatterplot",engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules22, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+
+plot(rules22,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+
+#2013
+```{r}
+data3 <- read.csv(paste(my.dir,"apriori2013.csv",sep=""))
+#挖掘规则
+rules3 <- apriori(data = data3, parameter = list(support = 0.08 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules3)
+rules33 <- sort(rules3,by='lift')[1:15]
+inspect(rules33)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules33, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules33, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules33,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2014
+```{r}
+data4 <- read.csv(paste(my.dir,"apriori2014.csv",sep=""))
+#挖掘规则
+rules4 <- apriori(data = data4, parameter = list(support = 0.08, confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules4)
+rules44 <- sort(rules4,by='lift')[1:15]
+inspect(rules44)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules44, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules44, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules44,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2015
+```{r}
+data5 <- read.csv(paste(my.dir,"apriori2015.csv",sep=""))
+#挖掘规则
+rules5 <- apriori(data = data5, parameter = list(support = 0.09, confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules5)
+rules55 <- sort(rules5,by='lift')[1:15]
+inspect(rules55)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules55, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules55, method="grouped matrix",lhs_items=9,shading='lift' ,k = 8,engine = "htmlwidget")
+plot(rules55,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2016
+```{r}
+data6 <- read.csv(paste(my.dir,"apriori2016.csv",sep=""))
+#挖掘规则
+rules6 <- apriori(data = data6, parameter = list(support = 0.1 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules6)
+rules66 <- sort(rules6,by='lift')[1:15]
+inspect(rules66)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules66, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules66, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules66,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+
+#2017
+```{r}
+data7 <- read.csv(paste(my.dir,"apriori2017.csv",sep=""))
+#挖掘规则
+rules7 <- apriori(data = data7, parameter = list(support = 0.1 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules7)
+rules77 <- sort(rules7,by='lift')[1:15]
+inspect(rules77)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules77, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules77, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules77,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2018
+```{r}
+data8 <- read.csv(paste(my.dir,"apriori2018.csv",sep=""))
+#挖掘规则
+rules8 <- apriori(data = data8, parameter = list(support = 0.08 , confidence = 0.9, minlen =2))
+#查看规则
+inspect(rules8)
+rules88 <- sort(rules8,by='lift')[1:15]
+inspect(rules88)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules88, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules88, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget")
+
+plot(rules88,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2019
+```{r}
+data9 <- read.csv(paste(my.dir,"apriori2019.csv",sep=""))
+#挖掘规则
+rules9 <- apriori(data = data9, parameter = list(support = 0.1 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules9)
+rules99 <- sort(rules9,by='lift')[1:15]
+inspect(rules99)
+#散点图 支持度置信度提升度分布大致范围，不含具体规则
+plot(rules99, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+#聚类图 htmlwidget 可以交互查看详情，图上mearrure为提升度
+plot(rules99, method="grouped matrix",lhs_items=9,shading='lift' ,k = 8,engine = "htmlwidget")
+plot(rules99,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+
+#2020
+```{r}
+data10 <- read.csv(paste(my.dir,"apriori2020.csv",sep=""))
+#挖掘规则
+rules10 <- apriori(data = data10, parameter = list(support = 0.1 , confidence = 0.8, minlen =2))
+#查看规则
+inspect(rules10)
+rules1010 <- sort(rules10,by='lift')[1:15]
+inspect(rules1010)
+plot(rules1010, method = "scatterplot", engine="plotly",control=list(jitter=2,col=rev(brewer.pal(11,"BrBG"))))
+plot(rules1010, method="grouped matrix",shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules1010,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+```
+‘default’, ‘ggplot2’, ‘base’, ‘grid’, ‘interactive’, ‘plotly’, ‘htmlwidget’
+control=list(jitter=2,col=rev(brewer.pal(9,"OrRd")))
+plot(rules6, method="grouped matrix",lhs_items=9,shading='lift' ,k = 10,engine = "htmlwidget",control=list(jitter=2,col=rev(brewer.pal(9,"OrRd"))))
+```{r}
+plot(rules11, method = "scatterplot", engine="grid",control=list(jitter=2,col=rev(brewer.pal(9,"OrRd"))))
+plot(rules11, method="grouped matrix",shading='lift' ,k = 10,engine = "htmlwidget")
+plot(rules1,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='htmlwidget')
+
+```
+
+
+ ‘dsfgn’ Valid engines: ‘default’, ‘ggplot2’, ‘igraph’, ‘interactive’, ‘graphviz’, ‘visNetwork’, ‘htmlwidget’
+```{r}
+plot(rules99,method = "graph",measure = "confidence",control = list(type="items"),shading = "lift",engine='igraph')
+```
+
