@@ -1,0 +1,187 @@
+```{r}
+remove(list = ls())
+require(INLA)
+inla.setOption(scale.model.default=FALSE)
+
+require(splancs)
+require(sp)
+require(fields)
+require(maptools)
+require(lattice)
+require(abind)
+remove(list=ls())
+setwd("C:\\Users\\jiawei\\Desktop\\INLA\\inla2")
+my.dir <- paste(getwd(),"/",sep="")
+data <- read.csv(paste(my.dir,"inlazong.csv",sep=""))
+georgia <- readShapePoly(paste(my.dir,"beat2.shp",sep=""))
+```
+```{r}
+#删除重复项 (area 88 and 94)
+names <- georgia$NAME
+#georgia <- georgia[-c(99,100,105,137),]
+data.georgia <- attr(georgia, "data")
+#取出观测值到low
+low.vector <- as.vector(as.matrix(data[,2:13]))#by column
+#取出预期值
+E.vector <- as.vector(as.matrix(data[,14:25]))#by column
+month <- numeric(0)
+for(i in 1:12){ 
+  month<- append(month,rep(i,dim(data)[1]))
+}
+county <- as.factor(rep(data[,1],12))
+#重新构建新的data
+data <- data.frame(y= low.vector, E= E.vector, ID.area=as.numeric(county), ID.area1=as.numeric(county), month=month,
+                  ID.month = month, ID.month1=month, ID.area.month = seq(1,length(county)))
+
+#添加gragh
+library(spdep)
+temp <- poly2nb(georgia)
+nb2INLA("beat.graph", temp)
+Georgia.adj <- paste(my.dir,"/beat.graph",sep="")
+```
+
+
+```{r}
+#时间和空间项
+formula.ST1 <- y ~  f(ID.area,model="bym",graph=Georgia.adj) +f(ID.month,model="rw2") + f(ID.month1,model="iid")
+lcs <- inla.make.lincombs(ID.month = diag(12),  ID.month1 = diag(12))
+model.ST1 <- inla(formula.ST1,family="poisson",data=data,E=E, 
+                  control.predictor=list(compute=TRUE),
+                  lincomb=lcs)
+#计算时间效应
+temporal.CAR <- lapply(model.ST1$marginals.random$ID.month, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.emarginal(mean, marg)
+                     })
+
+temporal.IID <- lapply(model.ST1$marginals.random$ID.month1, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.emarginal(mean, marg)
+                     })
+
+```
+
+
+```{r}
+#无时空交互
+summary(model.ST1)
+csi <- model.ST1$marginals.random$ID.area[1:271]
+zeta <- lapply(csi,function(x) inla.emarginal(exp,x))
+```
+
+```{r}
+# 无时空交互，出时间图
+plot(seq(1,12),seq(0.99999,1.00002,length=12),type="n",xlab="t",ylab=expression(exp(phi[t])))
+lines(unlist(temporal.IID))
+lines(unlist(temporal.CAR),lty=2)
+abline(h=1,lty=1)
+# ***
+```
+
+
+
+```{r}
+#时间项，空间项，时空交互
+ID.area.int <- data$ID.area
+ID.month.int <- data$ID.month
+#iid正态，rw2二阶游走
+formula.intI<- y ~ f(ID.area,model="bym",graph=Georgia.adj) +
+  +
+  f(ID.month,model="rw2") +
+  f(ID.month1,model="iid") + 
+  f(ID.area.month,model="iid")
+
+lcs <- inla.make.lincombs(ID.month = diag(12),  ID.month1 = diag(12))
+mod.intI <- inla(formula.intI,family="poisson",data=data,E=E, 
+                  control.predictor=list(compute=TRUE),
+                  control.compute=list(dic=TRUE,cpo=TRUE) 
+)
+```
+
+
+```{r}
+#有时空交互
+
+summary(mod.intI)
+csi2 <- mod.intI$marginals.random$ID.area[1:271]
+zeta2 <- lapply(csi2,function(x) inla.emarginal(exp,x))
+
+write.table(zeta2,"xin1kongjian.csv")
+
+```
+
+```{r}
+#时间图
+#car2结构化
+#iid2非结构化
+temporal.CAR2 <- lapply(mod.intI$marginals.random$ID.month, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.emarginal(mean, marg)
+                     })
+
+temporal.IID2 <- lapply(mod.intI$marginals.random$ID.month1, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.emarginal(mean, marg)
+                     })
+a=as.vector(unlist(temporal.CAR2))
+temporal.CAR3=log(a)
+b=as.vector(unlist(temporal.IID2))
+temporal.IID3=log(b)
+temporal=temporal.CAR3+temporal.IID3
+temporal.mean=exp(temporal)
+
+temporal.CAR95 <- lapply(mod.intI$marginals.random$ID.month, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.hpdmarginal(0.95, marg)
+                       
+                     })
+temporal.IID95 <- lapply(mod.intI$marginals.random$ID.month1, 
+                     function(X){
+                       marg <- inla.tmarginal(function(x) exp(x), X)
+                       inla.hpdmarginal(0.95, marg)
+                       
+                     })
+c=as.vector(unlist(temporal.CAR95))
+temporal.CAR4=log(c)
+
+d=as.vector(unlist(temporal.IID95))
+temporal.IID4=log(d)
+
+temporal95=temporal.CAR4+temporal.IID4
+temporal.95=exp(temporal95)
+
+```
+
+```{r}
+# 出时间图*** Code for Figure 7.3
+
+plot(xlim = c(1,12),seq(0.997,1.003,length=12),type="n",xlab="月份",ylab="主要时间风险")
+
+lines(unlist(temporal.CAR2))
+lines(unlist(temporal.IID2),lty=2)
+abline(h=1,lty=1)
+abline(h=0.997:1.003,v=1:12,col = "lightgray", lty = 3)
+
+```
+
+```{r}
+#出时空风险
+delta.intI <- data.frame(delta=mod.intI$summary.random$ID.area.month[,2],month=data$ID.month,ID.area=data$ID.area)
+delta.intI.matrix <- matrix(delta.intI[,1], 271,12,byrow=FALSE)
+rownames(delta.intI.matrix)<- delta.intI[1:271,3]
+#取指数
+delta.intI.matrix=exp(delta.intI.matrix)
+write.table(delta.intI.matrix,"xin1shikong.csv")
+
+
+
+```
+
+
+ 
+ 
